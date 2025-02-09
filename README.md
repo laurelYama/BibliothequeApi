@@ -72,7 +72,7 @@ Vous pouvez utiliser [Postman](https://www.postman.com/) ou [Swagger](http://loc
 L'API est documentée avec **Swagger**, ce qui permet de tester les endpoints directement depuis un navigateur.
 
 ### 🔗 Accéder à Swagger :
-- **Localement** : [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
+- **Localement** : [http://localhost:9090/swagger-ui.html](http://localhost:9090/swagger-ui.html)
 
 ### 🛠 Comment utiliser Swagger ?
 1. **Démarrer le serveur Spring Boot**  
