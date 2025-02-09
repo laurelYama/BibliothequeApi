@@ -4,6 +4,11 @@ import com.esiitech.bibliotheque_api.DTO.EmpruntDTO;
 import com.esiitech.bibliotheque_api.Entities.Utilisateur;
 import com.esiitech.bibliotheque_api.Repositories.UtilisateurRepository;
 import com.esiitech.bibliotheque_api.Services.EmpruntService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -13,7 +18,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@Tag(name = "Emprunts - Utilisateur", description = "Gestion des emprunts de livres")
 @RequestMapping("/api/user/emprunts") // Route spécifique pour USER
+@SecurityRequirement(name = "BearerAuth")
 public class EmpruntUserController {
 
     private final EmpruntService empruntService;
@@ -25,6 +32,12 @@ public class EmpruntUserController {
     }
 
     @GetMapping
+    @Operation(summary = "Obtenir les emprunts de l'utilisateur", description = "Retourne la liste des emprunts en cours pour l'utilisateur connecté.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Liste des emprunts récupérée avec succès"),
+            @ApiResponse(responseCode = "401", description = "Non autorisé"),
+            @ApiResponse(responseCode = "500", description = "Erreur interne du serveur")
+    })
     public ResponseEntity<List<EmpruntDTO>> getEmprunts(@AuthenticationPrincipal UserDetails userDetails) {
         Utilisateur utilisateur = utilisateurRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
@@ -33,6 +46,13 @@ public class EmpruntUserController {
     }
 
     @PostMapping
+    @Operation(summary = "Créer un emprunt", description = "Permet à un utilisateur d’emprunter un livre.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Emprunt créé avec succès"),
+            @ApiResponse(responseCode = "400", description = "Requête invalide"),
+            @ApiResponse(responseCode = "401", description = "Non autorisé"),
+            @ApiResponse(responseCode = "500", description = "Erreur interne du serveur")
+    })
     public ResponseEntity<EmpruntDTO> createEmprunt(@RequestBody @Valid EmpruntDTO empruntDTO,
                                                     @AuthenticationPrincipal UserDetails userDetails) {
         Utilisateur utilisateur = utilisateurRepository.findByEmail(userDetails.getUsername())
@@ -42,6 +62,13 @@ public class EmpruntUserController {
     }
 
     @PutMapping("/{id}/retourner")
+    @Operation(summary = "Retourner un livre", description = "Permet à un utilisateur de retourner un livre emprunté.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Livre retourné avec succès"),
+            @ApiResponse(responseCode = "404", description = "Emprunt non trouvé"),
+            @ApiResponse(responseCode = "401", description = "Non autorisé"),
+            @ApiResponse(responseCode = "500", description = "Erreur interne du serveur")
+    })
     public ResponseEntity<EmpruntDTO> retournerLivre(@PathVariable Long id,
                                                      @AuthenticationPrincipal UserDetails userDetails) {
         Utilisateur utilisateur = utilisateurRepository.findByEmail(userDetails.getUsername())
@@ -51,6 +78,12 @@ public class EmpruntUserController {
     }
 
     @GetMapping("/historique")
+    @Operation(summary = "Historique des emprunts", description = "Retourne l'historique des emprunts de l'utilisateur connecté.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Historique récupéré avec succès"),
+            @ApiResponse(responseCode = "401", description = "Non autorisé"),
+            @ApiResponse(responseCode = "500", description = "Erreur interne du serveur")
+    })
     public ResponseEntity<List<EmpruntDTO>> getHistoriqueEmprunts(@AuthenticationPrincipal UserDetails userDetails) {
         Utilisateur utilisateur = utilisateurRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));

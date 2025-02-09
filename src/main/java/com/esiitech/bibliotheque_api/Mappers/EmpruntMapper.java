@@ -20,7 +20,7 @@ public class EmpruntMapper {
             return null;
         }
 
-        // Correction : récupération des données depuis l'objet emprunt
+        // récupération des données depuis l'objet emprunt
         EmpruntDTO dto = new EmpruntDTO(emprunt);
         dto.setId(emprunt.getId());
         dto.setUtilisateurId(emprunt.getUtilisateur().getId());
@@ -29,7 +29,7 @@ public class EmpruntMapper {
         dto.setDateRetourPrevu(emprunt.getDateRetourPrevu());
         dto.setDateRetourEffectif(emprunt.getDateRetourEffectif());
 
-        return dto; // Correction : ajout du return
+        return dto;
     }
 
     public static Emprunt toEntity(EmpruntDTO dto, UtilisateurService utilisateurService, LivreService livreService) {
