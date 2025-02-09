@@ -66,6 +66,35 @@ L'API utilise JWT pour l'authentification.
 
 Vous pouvez utiliser [Postman](https://www.postman.com/) ou [Swagger](http://localhost:9090/swagger-ui.html) pour tester les routes.
 
+
+## 📖 Documentation API avec Swagger
+
+L'API est documentée avec **Swagger**, ce qui permet de tester les endpoints directement depuis un navigateur.
+
+### 🔗 Accéder à Swagger :
+- **Localement** : [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
+
+### 🛠 Comment utiliser Swagger ?
+1. **Démarrer le serveur Spring Boot**  
+2. **Ouvrir un navigateur** et accéder à l'URL ci-dessus  
+3. **Explorer les endpoints** :
+   - Consulter la documentation
+   - Tester les requêtes directement via l'interface  
+   - Voir les schémas des requêtes et des réponses
+
+---
+
+## 🚀 Tester l'API avec Postman
+1. **Télécharge la collection Postman** :  
+   [📥 Télécharger Bibliotheque_API.postman_collection.json](./Bibliotheque_API.postman_collection.json)
+2. **Ouvre Postman**  
+3. **Importe la collection** :
+   - Allez dans **Fichier → Importer**
+   - Sélectionnez le fichier `.json`
+4. **Configure l’environnement (facultatif)**
+5. **Lance les requêtes et teste l'API ! 🚀**
+
+
 ## Auteur
 - **Laurel YAMA** - [Votre Profil GitHub](https://github.com/laurelYama)
 
