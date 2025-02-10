@@ -84,6 +84,15 @@ L'API est documentée avec **Swagger**, ce qui permet de tester les endpoints di
 
 ---
 
+📌 Collection Postman - Bibliothèque API
+Dans mon repository GitHub, j'ai inclus une collection Postman permettant de tester facilement les différentes fonctionnalités de l'API Bibliothèque. Cette collection contient plusieurs requêtes organisées pour interagir avec l'application, notamment :
+
+Authentification : Connexion (/api/auth/login), inscription (/api/auth/register).
+Utilisateurs : Récupération de la liste des utilisateurs, création, modification et suppression.
+Livres : Ajout, suppression, mise à jour et récupération des livres disponibles dans la bibliothèque.
+Emprunts : Gestion des emprunts de livres par les utilisateurs, avec suivi des retours et des retards.
+Administration : Routes réservées aux administrateurs pour gérer les utilisateurs, surveiller les emprunts et voir les livres en circulation.
+
 ## 🚀 Tester l'API avec Postman
 1. **Télécharge la collection Postman** :  
    [📥 Télécharger Bibliotheque_API.postman_collection.json](./Bibliotheque_API.postman_collection.json)
