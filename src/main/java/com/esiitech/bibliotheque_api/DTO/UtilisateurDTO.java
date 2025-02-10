@@ -4,13 +4,10 @@ import com.esiitech.bibliotheque_api.Enum.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
 
 
 public class UtilisateurDTO {
-    @Setter
-    @Getter
+
     private Long id;
 
     @NotBlank(message = "Le nom est obligatoire")
@@ -24,8 +21,6 @@ public class UtilisateurDTO {
     @Size(min = 6, message = "Le mot de passe doit contenir au moins 6 caractères")
     private String motDePasse;
 
-    @Setter
-    @Getter
     private Role role;
 
     public UtilisateurDTO() {
@@ -65,10 +60,6 @@ public class UtilisateurDTO {
 
     public void setEmail(@NotBlank(message = "L'email est obligatoire") @Email(message = "L'email doit être valide") String email) {
         this.email = email;
-    }
-
-    public void setMotDePasse(@NotBlank(message = "Le mot de passe est obligatoire") @Size(min = 6, message = "Le mot de passe doit contenir au moins 6 caractères") String motDePasse) {
-        this.motDePasse = motDePasse;
     }
 
     public void setId(Long id) {

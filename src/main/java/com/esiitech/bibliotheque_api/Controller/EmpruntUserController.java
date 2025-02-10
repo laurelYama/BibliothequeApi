@@ -4,6 +4,7 @@ import com.esiitech.bibliotheque_api.DTO.EmpruntDTO;
 import com.esiitech.bibliotheque_api.Entities.Utilisateur;
 import com.esiitech.bibliotheque_api.Repositories.UtilisateurRepository;
 import com.esiitech.bibliotheque_api.Services.EmpruntService;
+import com.esiitech.bibliotheque_api.Services.UtilisateurService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -25,10 +26,12 @@ public class EmpruntUserController {
 
     private final EmpruntService empruntService;
     private final UtilisateurRepository utilisateurRepository;
+    private final UtilisateurService utilisateurService;
 
-    public EmpruntUserController(EmpruntService empruntService, UtilisateurRepository utilisateurRepository) {
+    public EmpruntUserController(EmpruntService empruntService, UtilisateurRepository utilisateurRepository, UtilisateurService utilisateurService) {
         this.empruntService = empruntService;
         this.utilisateurRepository = utilisateurRepository;
+        this.utilisateurService = utilisateurService;
     }
 
     @GetMapping
@@ -90,4 +93,16 @@ public class EmpruntUserController {
 
         return ResponseEntity.ok(empruntService.getHistoriqueEmpruntsByUser(utilisateur.getId()));
     }
+
+    @GetMapping("/{id}/retards")
+    @Operation(summary = "Lister les emprunts en retard de l'utilisateur connecté",
+            description = "Retourne tous les emprunts en retard de l'utilisateur actuellement authentifié.")
+    public ResponseEntity<List<EmpruntDTO>> getEmpruntsEnRetard(@AuthenticationPrincipal UserDetails userDetails) {
+        // Récupérer l'utilisateur connecté
+        Utilisateur utilisateur = utilisateurService.findByEmail(userDetails.getUsername());
+
+        return ResponseEntity.ok(empruntService.getEmpruntsEnRetard(utilisateur.getId()));
+    }
+
+
 }

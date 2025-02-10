@@ -6,13 +6,15 @@ import com.esiitech.bibliotheque_api.Entities.Utilisateur;
 import com.esiitech.bibliotheque_api.Entities.Livre;
 import com.esiitech.bibliotheque_api.Services.LivreService;
 import com.esiitech.bibliotheque_api.Services.UtilisateurService;
+import org.mapstruct.Mapper;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
+@SpringBootApplication(scanBasePackages = "com.esiitech.bibliotheque_api")
 public class EmpruntMapper {
 
     public static EmpruntDTO toDTO(Emprunt emprunt) {
@@ -43,7 +45,7 @@ public class EmpruntMapper {
         Livre livre = livreService.getLivreById(dto.getLivreId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Livre non trouvé"));
 
-        // Vérifiez que votre classe Emprunt a bien un constructeur avec ces paramètres
+
         return new Emprunt(dto.getId(), utilisateur, livre, dto.getDateEmprunt(), dto.getDateRetourPrevu(), dto.getDateRetourEffectif());
     }
 

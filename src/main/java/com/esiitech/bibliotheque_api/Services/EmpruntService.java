@@ -6,10 +6,12 @@ import com.esiitech.bibliotheque_api.Entities.Livre;
 import com.esiitech.bibliotheque_api.Entities.Utilisateur;
 import com.esiitech.bibliotheque_api.Exception.BadRequestException;
 import com.esiitech.bibliotheque_api.Exception.NotFoundException;
+import com.esiitech.bibliotheque_api.Mappers.EmpruntMapper;
 import com.esiitech.bibliotheque_api.Repositories.EmpruntRepository;
 import com.esiitech.bibliotheque_api.Repositories.UtilisateurRepository;
 import com.esiitech.bibliotheque_api.Repositories.LivreRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -23,7 +25,7 @@ public class EmpruntService {
     private final UtilisateurRepository utilisateurRepository;
     private final LivreRepository livreRepository;
 
-    public EmpruntService(EmpruntRepository empruntRepository, UtilisateurRepository utilisateurRepository, LivreRepository livreRepository) {
+    public EmpruntService(EmpruntRepository empruntRepository, UtilisateurRepository utilisateurRepository, LivreRepository livreRepository, EmpruntMapper empruntMapper) {
         this.empruntRepository = empruntRepository;
         this.utilisateurRepository = utilisateurRepository;
         this.livreRepository = livreRepository;
@@ -118,6 +120,56 @@ public class EmpruntService {
     public List<EmpruntDTO> getHistoriqueEmprunts() {
         List<Emprunt> emprunts = empruntRepository.findAll();
         return emprunts.stream().map(EmpruntDTO::new).collect(Collectors.toList());
+    }
+
+    public List<EmpruntDTO> getEmpruntsEnCoursParUtilisateur(Long utilisateurId) {
+        return empruntRepository.findByUtilisateurId(utilisateurId)
+                .stream()
+                .map(EmpruntMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    public List<EmpruntDTO> getHistoriqueEmpruntsParUtilisateur(Long utilisateurId) {
+        return empruntRepository.findByUtilisateurId(utilisateurId)
+                .stream()
+                .map(EmpruntMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    // Retourne la liste des emprunts en retard pour un utilisateur donné.
+    public List<EmpruntDTO> getEmpruntsEnRetard(Long utilisateurId) {
+        LocalDate today = LocalDate.now();
+        List<Emprunt> empruntsEnRetard = empruntRepository.findByUtilisateurIdAndDateRetourPrevuBeforeAndDateRetourEffectifIsNull(utilisateurId, today);
+
+        return empruntsEnRetard.stream()
+                .map(EmpruntDTO::new)
+                .collect(Collectors.toList());
+    }
+
+    public List<EmpruntDTO> getEmpruntsEnRetardParUtilisateurPourAdmin(Long utilisateurId) {
+        LocalDate today = LocalDate.now();
+        List<Emprunt> empruntsEnRetard = empruntRepository.findByUtilisateurIdAndDateRetourPrevuBeforeAndDateRetourEffectifIsNull(utilisateurId, today);
+
+        if (empruntsEnRetard.isEmpty()) {
+            throw new NotFoundException("Aucun emprunt en retard pour cet utilisateur.");
+        }
+
+        return empruntsEnRetard.stream()
+                .map(EmpruntDTO::new)
+                .collect(Collectors.toList());
+    }
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<EmpruntDTO> getEmpruntsEnRetardPourAdmin() {
+        LocalDate today = LocalDate.now();
+        List<Emprunt> empruntsEnRetard = empruntRepository.findByDateRetourPrevuBeforeAndDateRetourEffectifIsNull(today);
+
+        if (empruntsEnRetard.isEmpty()) {
+            throw new NotFoundException("Aucun emprunt en retard.");
+        }
+
+        return empruntsEnRetard.stream()
+                .map(EmpruntDTO::new)
+                .collect(Collectors.toList());
     }
 
 }

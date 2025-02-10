@@ -5,7 +5,6 @@ import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 
-
 @Entity
 @Table(name = "emprunts")
 public class Emprunt {
@@ -23,7 +22,6 @@ public class Emprunt {
     private Livre livre;
 
     @NotNull(message = "La date d'emprunt est obligatoire")
-    @FutureOrPresent(message = "La date d'emprunt ne peut pas être dans le futur")
     private LocalDate dateEmprunt;
 
     @NotNull(message = "La date de retour prévue est obligatoire")
@@ -33,11 +31,6 @@ public class Emprunt {
     private LocalDate dateRetourEffectif;
 
     public Emprunt() {
-
-    }
-
-    public boolean isRendu() {
-        return dateRetourEffectif != null;
     }
 
     public Emprunt(Long id, Utilisateur utilisateur, Livre livre, LocalDate dateEmprunt, LocalDate dateRetourPrevu, LocalDate dateRetourEffectif) {
@@ -48,6 +41,7 @@ public class Emprunt {
         this.dateRetourPrevu = dateRetourPrevu;
         this.dateRetourEffectif = dateRetourEffectif;
     }
+
 
     public Long getId() {
         return id;
@@ -61,18 +55,17 @@ public class Emprunt {
         return livre;
     }
 
-    public @NotNull(message = "La date d'emprunt est obligatoire") @FutureOrPresent(message = "La date d'emprunt ne peut pas être dans le futur") LocalDate getDateEmprunt() {
+    public LocalDate getDateEmprunt() {
         return dateEmprunt;
     }
 
-    public @NotNull(message = "La date de retour prévue est obligatoire") @FutureOrPresent(message = "La date de retour prévue ne peut pas être dans le passé") LocalDate getDateRetourPrevu() {
+    public LocalDate getDateRetourPrevu() {
         return dateRetourPrevu;
     }
 
     public LocalDate getDateRetourEffectif() {
         return dateRetourEffectif;
     }
-
 
     public void setId(Long id) {
         this.id = id;
@@ -86,15 +79,22 @@ public class Emprunt {
         this.livre = livre;
     }
 
-    public void setDateEmprunt(@NotNull(message = "La date d'emprunt est obligatoire") @FutureOrPresent(message = "La date d'emprunt ne peut pas être dans le futur") LocalDate dateEmprunt) {
+    public void setDateEmprunt(LocalDate dateEmprunt) {
         this.dateEmprunt = dateEmprunt;
     }
 
-    public void setDateRetourPrevu(@NotNull(message = "La date de retour prévue est obligatoire") @FutureOrPresent(message = "La date de retour prévue ne peut pas être dans le passé") LocalDate dateRetourPrevu) {
+    public void setDateRetourPrevu(LocalDate dateRetourPrevu) {
         this.dateRetourPrevu = dateRetourPrevu;
     }
 
     public void setDateRetourEffectif(LocalDate dateRetourEffectif) {
+        if (dateRetourEffectif != null && dateRetourEffectif.isBefore(this.dateEmprunt)) {
+            throw new IllegalArgumentException("La date de retour effectif ne peut pas être avant la date d'emprunt.");
+        }
         this.dateRetourEffectif = dateRetourEffectif;
+    }
+
+    public boolean isRendu() {
+        return dateRetourEffectif != null;
     }
 }

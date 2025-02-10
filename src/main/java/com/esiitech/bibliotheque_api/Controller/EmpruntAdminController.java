@@ -35,4 +35,30 @@ public class EmpruntAdminController {
     public ResponseEntity<List<EmpruntDTO>> getHistoriqueEmpruntsAdmin() {
         return ResponseEntity.ok(empruntService.getHistoriqueEmprunts());
     }
+
+    @GetMapping("/utilisateur/{utilisateurId}/en-cours")
+    @Operation(summary = "Lister les emprunts en cours d'un utilisateur", description = "Retourne tous les emprunts en cours d'un utilisateur.")
+    public ResponseEntity<List<EmpruntDTO>> getEmpruntsEnCoursParUtilisateur(@PathVariable Long utilisateurId) {
+        return ResponseEntity.ok(empruntService.getEmpruntsEnCoursParUtilisateur(utilisateurId));
+    }
+
+    @GetMapping("/utilisateur/{utilisateurId}/historique")
+    @Operation(summary = "Lister l'historique des emprunts d'un utilisateur", description = "Retourne l'historique complet des emprunts effectués par un utilisateur.")
+    public ResponseEntity<List<EmpruntDTO>> getHistoriqueEmpruntsParUtilisateur(@PathVariable Long utilisateurId) {
+        return ResponseEntity.ok(empruntService.getHistoriqueEmpruntsParUtilisateur(utilisateurId));
+    }
+
+
+    @GetMapping("/retards")
+    @Operation(summary = "Lister tous les emprunts en retard", description = "Retourne tous les emprunts en retard de la bibliothèque.")
+    public ResponseEntity<List<EmpruntDTO>> getEmpruntsEnRetardPourAdmin() {
+        return ResponseEntity.ok(empruntService.getEmpruntsEnRetardPourAdmin());
+    }
+
+    @GetMapping("/utilisateur/{utilisateurId}/retards")
+    @Operation(summary = "Lister les emprunts en retard d'un utilisateur", description = "Retourne tous les emprunts en retard d'un utilisateur spécifique.")
+    public ResponseEntity<List<EmpruntDTO>> getEmpruntsEnRetardParUtilisateur(@PathVariable Long utilisateurId) {
+        return ResponseEntity.ok(empruntService.getEmpruntsEnRetardParUtilisateurPourAdmin(utilisateurId));
+    }
+
 }

@@ -26,6 +26,11 @@ public class UtilisateurService {
         return utilisateurRepository.findById(id).orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
     }
 
+    public Utilisateur findByEmail(String email) {
+        return utilisateurRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException("Utilisateur non trouvé avec l'email : " + email));
+    }
+
     // Supprimer un utilisateur - réservé à l'ADMIN
     @PreAuthorize("hasRole('ADMIN')")
     public void deleteUtilisateur(Long id) {

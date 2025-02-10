@@ -10,160 +10,275 @@
 			"name": "Emprunt",
 			"item": [
 				{
-					"name": "Emprunter un livre",
-					"request": {
-						"auth": {
-							"type": "bearer"
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"livreId\": 1,\r\n  \"utilisateurId\": 1,\r\n  \"dateEmprunt\": \"2025-02-06\",\r\n  \"dateRetour\": \"2025-02-20\"\r\n}\r\n",
-							"options": {
-								"raw": {
-									"language": "json"
+					"name": "USER",
+					"item": [
+						{
+							"name": "Emprunter un livre",
+							"request": {
+								"auth": {
+									"type": "bearer"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"livreId\": 1,\r\n  \"utilisateurId\": 1,\r\n  \"dateEmprunt\": \"2025-02-06\",\r\n  \"dateRetour\": \"2025-02-20\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:9090/api/emprunts",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9090",
+									"path": [
+										"api",
+										"emprunts"
+									]
 								}
-							}
+							},
+							"response": []
 						},
-						"url": {
-							"raw": "http://localhost:9090/api/emprunts",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "9090",
-							"path": [
-								"api",
-								"emprunts"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Consulter les emprunts d'un utilisateur",
-					"request": {
-						"auth": {
-							"type": "bearer"
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:9090/api/emprunts",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "9090",
-							"path": [
-								"api",
-								"emprunts"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Consulter l’historique des emprunts de l’utilisateur connecté",
-					"request": {
-						"auth": {
-							"type": "bearer"
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:9090/api/emprunts/{id}",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "9090",
-							"path": [
-								"api",
-								"emprunts",
-								"{id}"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Retourner un livre emprunté",
-					"request": {
-						"auth": {
-							"type": "bearer"
-						},
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"livreId\": 1,\r\n  \"utilisateurId\": 2,\r\n  \"dateEmprunt\": \"2025-02-06\",\r\n  \"dateRetour\": \"2025-02-25\"\r\n}\r\n",
-							"options": {
-								"raw": {
-									"language": "json"
+						{
+							"name": "Retourner un livre emprunté",
+							"request": {
+								"auth": {
+									"type": "bearer"
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"livreId\": 1,\r\n  \"utilisateurId\": 2,\r\n  \"dateEmprunt\": \"2025-02-06\",\r\n  \"dateRetour\": \"2025-02-25\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:9090/api/emprunts/{id}",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9090",
+									"path": [
+										"api",
+										"emprunts",
+										"{id}"
+									]
 								}
-							}
+							},
+							"response": []
 						},
-						"url": {
-							"raw": "http://localhost:9090/api/emprunts/{id}",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "9090",
-							"path": [
-								"api",
-								"emprunts",
-								"{id}"
-							]
+						{
+							"name": "Consulter les emprunts d'un utilisateur",
+							"request": {
+								"auth": {
+									"type": "bearer"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:9090/api/emprunts",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9090",
+									"path": [
+										"api",
+										"emprunts"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Consulter l’historique des emprunts de l’utilisateur connecté",
+							"request": {
+								"auth": {
+									"type": "bearer"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:9090/api/emprunts/{id}",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9090",
+									"path": [
+										"api",
+										"emprunts",
+										"{id}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Lister les emprunts en retard d'un utilisateur",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiaWxseUBleGFtcGxlLmNvbSIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzM5MTg4Njc4LCJleHAiOjE3MzkyMjQ2Nzh9.ddnnUjmYm-HPJYmhetLUEpsdsUzZmTiHKHL0n3sxEEo",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:9090/api/user/emprunts/15/retards",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9090",
+									"path": [
+										"api",
+										"user",
+										"emprunts",
+										"15",
+										"retards"
+									]
+								}
+							},
+							"response": []
 						}
-					},
-					"response": []
+					]
 				},
 				{
-					"name": "Voir les emprunts en cours",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:9090/api/admin/emprunts/en-cours",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "9090",
-							"path": [
-								"api",
-								"admin",
-								"emprunts",
-								"en-cours"
-							]
+					"name": "ADMIN",
+					"item": [
+						{
+							"name": "Voir tout l’historique des emprunts",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:9090/api/admin/emprunts/historique",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9090",
+									"path": [
+										"api",
+										"admin",
+										"emprunts",
+										"historique"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Récupérer les emprunts en cours d’un utilisateur",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:9090/api/admin/emprunts/utilisateur/{id}/en-cours",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9090",
+									"path": [
+										"api",
+										"admin",
+										"emprunts",
+										"utilisateur",
+										"{id}",
+										"en-cours"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Récuperer l’historique des emprunts d’un utilisateur",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:9090/api/admin/emprunts/utilisateur/{id}/historique",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9090",
+									"path": [
+										"api",
+										"admin",
+										"emprunts",
+										"utilisateur",
+										"{id}",
+										"historique"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Récupérer tous les emprunts en retard",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:9090/api/admin/emprunts/retards",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9090",
+									"path": [
+										"api",
+										"admin",
+										"emprunts",
+										"retards"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Récupérer les emprunts en retard d'un utilisateur spécifique",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:9090/api/admin/emprunts/utilisateur/5/retards",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9090",
+									"path": [
+										"api",
+										"admin",
+										"emprunts",
+										"utilisateur",
+										"5",
+										"retards"
+									]
+								}
+							},
+							"response": []
 						}
-					},
-					"response": []
-				},
-				{
-					"name": "Voir tout l’historique des emprunts",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:9090/api/admin/emprunts/historique",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "9090",
-							"path": [
-								"api",
-								"admin",
-								"emprunts",
-								"historique"
-							]
-						}
-					},
-					"response": []
+					]
 				}
 			]
 		},
