@@ -62,6 +62,23 @@ L'API utilise JWT pour l'authentification.
 - `PUT /api/user/emprunts/{id}/retourner` : Retourner un livre
 - `GET /api/user/emprunts` : Voir les emprunts de l'utilisateur connecté
 
+  ## 🔑 Authentification et Rôle Administrateur
+
+L'API nécessite une authentification basée sur JWT. Pour accéder aux fonctionnalités administratives, il faut être connecté en tant qu'**ADMIN**.
+
+### 🛠 Initialisation d'un Administrateur par Défaut
+
+Un problème courant dans les API sécurisées est l'absence initiale d'un compte administrateur. Pour résoudre cela, nous avons mis en place un **DatabaseInitializer** qui crée automatiquement un compte administrateur par défaut si aucun n'existe.
+
+📍 **Emplacement du fichier :** `src/main/java/com/esiitech/bibliotheque_api/config/DatabaseInitializer.java`
+
+📌 **Détails du compte administrateur par défaut :**
+- **Email :** `admin@bibliotheque.com`
+- **Mot de passe :** `admin123`
+
+💡 **Une fois connecté, l'admin peut créer d'autres utilisateurs via l'API.**
+
+
 ## Tests de l'API
 
 Vous pouvez utiliser [Postman](https://www.postman.com/) ou [Swagger](http://localhost:9090/swagger-ui.html) pour tester les routes.
