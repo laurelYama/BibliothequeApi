@@ -122,7 +122,7 @@ Administration : Routes réservées aux administrateurs pour gérer les utilisat
 
 
 ## Auteur
-- **Laurel YAMA** - [Votre Profil GitHub](https://github.com/laurelYama)
+- **Laurel YAMA** - [Mon Profil GitHub](https://github.com/laurelYama)
 
 ## Licence
 Ce projet est sous licence MIT.
