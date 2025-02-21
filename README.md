@@ -6,49 +6,130 @@ Bibliotheque API est une application permettant de gérer l'emprunt et le retour
 ## Prérequis
 Avant d'exécuter le projet, assurez-vous d'avoir installé :
 
-- [Java 17](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html)
-- [Spring Boot](https://spring.io/projects/spring-boot)
-- [MySQL](https://dev.mysql.com/downloads/installer/)
-- [Maven](https://maven.apache.org/install.html)
-- [Postman](https://www.postman.com/) (pour tester l'API)
+- Java 17
+- Spring Boot
+- MySQL
+- Maven
+- Postman (pour tester l'API)
+- Docker et Docker Compose (pour l'exécution avec conteneurisation)
 
 ## Installation
+### Installation manuelle
 
-1. Clonez le projet :
-   ```sh
-   git clone https://github.com/laurelYama/BibliothequeApi.git
-   cd bibliotheque-api
-   ```
-
-2. Configurez la base de données :
-   - Créez une base de données MySQL :
-     ```sql
-     CREATE DATABASE bibliotheque;
-     ```
-   - Configurez `application.properties` dans `src/main/resources` :
-     ```properties
-     spring.datasource.url=jdbc:mysql://localhost:3306/bibliotheque
-     spring.datasource.username=root
-     spring.datasource.password=motdepasse
-     spring.jpa.hibernate.ddl-auto=update
-     spring.jpa.show-sql=true
-     ```
-
-3. Installez les dépendances et compilez le projet :
-   ```sh
-   mvn clean install
-   ```
-
-## Exécution du projet
-
-Démarrez l'API avec :
+Clonez le projet :
 ```sh
-mvn spring-boot:run
+git clone https://github.com/laurelYama/BibliothequeApi.git
+cd bibliotheque-api
 ```
-L'API sera accessible à l'adresse : `http://localhost:9090`
+
+Configurez la base de données :
+
+Créez une base de données MySQL :
+```sql
+CREATE DATABASE bibliotheque;
+```
+
+Configurez `application.properties` dans `src/main/resources` :
+```properties
+spring.datasource.url=jdbc:mysql://localhost:3306/bibliotheque
+spring.datasource.username=root
+spring.datasource.password=motdepasse
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+```
+
+Installez les dépendances et compilez le projet :
+```sh
+mvn clean install
+```
+
+### Installation avec Docker
+
+Le projet est prévu pour être exécuté dans des conteneurs Docker. Assurez-vous que Docker et Docker Compose sont installés sur votre machine.
+
+1. **Démarrez l'application avec Docker Compose** :
+   ```sh
+   docker-compose up -d --build
+   ```
+
+2. **Vérifiez que les services sont bien lancés** :
+   ```sh
+   docker ps
+   ```
+
+3. **Accédez à l'API** :
+   L'API sera accessible à l'adresse : [http://localhost:9090](http://localhost:9090)
+
+Si vous souhaitez arrêter les conteneurs :
+```sh
+docker-compose down
+```
+
+## Configuration de Docker
+
+### Fichier `Dockerfile`
+Le `Dockerfile` est utilisé pour créer l'image Docker de l'application Spring Boot.
+```dockerfile
+# Utilisation de l'image officielle OpenJDK
+FROM openjdk:17-jdk-slim
+
+# Définition du répertoire de travail
+WORKDIR /app
+
+# Copier le fichier JAR de l'application
+COPY target/bibliotheque-api-0.0.1-SNAPSHOT.jar app.jar
+
+# Exposer le port de l'application
+EXPOSE 9090
+
+# Commande pour exécuter l'application
+ENTRYPOINT ["java", "-jar", "app.jar"]
+```
+
+### Fichier `docker-compose.yml`
+Le fichier `docker-compose.yml` définit les services nécessaires au bon fonctionnement de l'application.
+```yaml
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: bibliotheque-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456789
+      MYSQL_DATABASE: bibliotheque
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - bibliotheque-net
+
+  api:
+    build: .
+    container_name: bibliotheque-api
+    depends_on:
+      - mysql
+    ports:
+      - "9090:9090"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://bibliotheque-mysql:3306/bibliotheque
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=123456789
+    networks:
+      - bibliotheque-net
+
+volumes:
+  mysql_data:
+
+networks:
+  bibliotheque-net:
+```
 
 ## Routes principales
 L'API utilise JWT pour l'authentification.
+
 ### Authentification
 - `POST /api/auth/login` : Connexion avec email et mot de passe
 - `POST /api/auth/register` : Inscription d'un utilisateur
@@ -62,67 +143,43 @@ L'API utilise JWT pour l'authentification.
 - `PUT /api/user/emprunts/{id}/retourner` : Retourner un livre
 - `GET /api/user/emprunts` : Voir les emprunts de l'utilisateur connecté
 
-  ## 🔑 Authentification et Rôle Administrateur
-
-L'API nécessite une authentification basée sur JWT. Pour accéder aux fonctionnalités administratives, il faut être connecté en tant qu'**ADMIN**.
+## 🔑 Authentification et Rôle Administrateur
+L'API nécessite une authentification basée sur JWT. Pour accéder aux fonctionnalités administratives, il faut être connecté en tant qu'ADMIN.
 
 ### 🛠 Initialisation d'un Administrateur par Défaut
+Un administrateur par défaut est créé lors de l'initialisation si aucun n'existe.
 
-Un problème courant dans les API sécurisées est l'absence initiale d'un compte administrateur. Pour résoudre cela, nous avons mis en place un **DatabaseInitializer** qui crée automatiquement un compte administrateur par défaut si aucun n'existe.
+📍 **Fichier concerné** : `src/main/java/com/esiitech/bibliotheque_api/config/DatabaseInitializer.java`
 
-📍 **Emplacement du fichier :** `src/main/java/com/esiitech/bibliotheque_api/config/DatabaseInitializer.java`
-
-📌 **Détails du compte administrateur par défaut :**
-- **Email :** `admin@bibliotheque.com`
-- **Mot de passe :** `admin123`
-
-💡 **Une fois connecté, l'admin peut créer d'autres utilisateurs via l'API.**
-
-
-## Tests de l'API
-
-Vous pouvez utiliser [Postman](https://www.postman.com/) ou [Swagger](http://localhost:9090/swagger-ui.html) pour tester les routes.
-
+📌 **Détails du compte administrateur par défaut** :
+- **Email** : `admin@bibliotheque.com`
+- **Mot de passe** : `admin123`
 
 ## 📖 Documentation API avec Swagger
+L'API est documentée avec Swagger, permettant de tester les endpoints directement depuis un navigateur.
 
-L'API est documentée avec **Swagger**, ce qui permet de tester les endpoints directement depuis un navigateur.
-
-### 🔗 Accéder à Swagger :
-- **Localement** : [http://localhost:9090/swagger-ui.html](http://localhost:9090/swagger-ui.html)
+🔗 **Accéder à Swagger** :
+- Localement : [http://localhost:9090/swagger-ui.html](http://localhost:9090/swagger-ui.html)
 
 ### 🛠 Comment utiliser Swagger ?
-1. **Démarrer le serveur Spring Boot**  
-2. **Ouvrir un navigateur** et accéder à l'URL ci-dessus  
-3. **Explorer les endpoints** :
-   - Consulter la documentation
-   - Tester les requêtes directement via l'interface  
-   - Voir les schémas des requêtes et des réponses
+1. Démarrer le serveur Spring Boot
+2. Ouvrir un navigateur et accéder à l'URL ci-dessus
+3. Explorer les endpoints
 
----
+## 📌 Collection Postman - Bibliothèque API
+Dans le repository GitHub, une collection Postman est incluse pour tester les différentes fonctionnalités de l'API.
 
-📌 Collection Postman - Bibliothèque API
-Dans mon repository GitHub, j'ai inclus une collection Postman permettant de tester facilement les différentes fonctionnalités de l'API Bibliothèque. Cette collection contient plusieurs requêtes organisées pour interagir avec l'application, notamment :
-
-Authentification : Connexion (/api/auth/login), inscription (/api/auth/register).
-Utilisateurs : Récupération de la liste des utilisateurs, création, modification et suppression.
-Livres : Ajout, suppression, mise à jour et récupération des livres disponibles dans la bibliothèque.
-Emprunts : Gestion des emprunts de livres par les utilisateurs, avec suivi des retours et des retards.
-Administration : Routes réservées aux administrateurs pour gérer les utilisateurs, surveiller les emprunts et voir les livres en circulation.
-
-## 🚀 Tester l'API avec Postman
-1. **Télécharge la collection Postman** :  
-   [📥 Télécharger Bibliotheque_API.postman_collection.json](./Bibliotheque_API.postman_collection.json)
-2. **Ouvre Postman**  
-3. **Importe la collection** :
-   - Allez dans **Fichier → Importer**
+🚀 **Tester l'API avec Postman**
+1. **Téléchargez la collection Postman** :
+   📥 [Bibliotheque_API.postman_collection.json](https://github.com/laurelYama/BibliothequeApi)
+2. **Ouvrir Postman**
+3. **Importer la collection** :
+   - Allez dans **Fichier** → **Importer**
    - Sélectionnez le fichier `.json`
-4. **Configure l’environnement (facultatif)**
-5. **Lance les requêtes et teste l'API ! 🚀**
-
+4. **Lancez les requêtes et testez l'API !** 🚀
 
 ## Auteur
-- **Laurel YAMA** - [Mon Profil GitHub](https://github.com/laurelYama)
+**Laurel YAMA** - [Mon Profil GitHub](https://github.com/laurelYama)
 
 ## Licence
 Ce projet est sous licence MIT.
