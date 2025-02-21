@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: bibliotheque-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456789
+      MYSQL_DATABASE: bibliotheque
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - bibliotheque-net
+
+  api:
+    build: .
+    container_name: bibliotheque-api
+    depends_on:
+      - mysql
+    ports:
+      - "9090:9090"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://bibliotheque-mysql:3306/bibliotheque
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=123456789
+    networks:
+      - bibliotheque-net
+
+volumes:
+  mysql_data:
+
+networks:
+  bibliotheque-net:

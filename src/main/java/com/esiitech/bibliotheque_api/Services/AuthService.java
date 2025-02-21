@@ -6,7 +6,6 @@ import com.esiitech.bibliotheque_api.DTO.UtilisateurDTO;
 import com.esiitech.bibliotheque_api.Entities.Utilisateur;
 import com.esiitech.bibliotheque_api.Repositories.UtilisateurRepository;
 import com.esiitech.bibliotheque_api.Security.JwtUtil;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
