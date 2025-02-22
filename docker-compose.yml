@@ -29,6 +29,20 @@ services:
     networks:
       - bibliotheque-net
 
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    container_name: bibliotheque-swagger
+    depends_on:
+      - api
+    ports:
+      - "8080:8080"
+    environment:
+      - SWAGGER_JSON=/swagger.json
+    volumes:
+      - ./swagger.yaml:/api-docs/swagger.yaml
+    networks:
+      - bibliotheque-net
+
 volumes:
   mysql_data:
 
